@@ -1,15 +1,28 @@
-<h2>To do</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+</head>
+<body>
+    <h2>To do</h2>
+    {% load socialaccount %}
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
+        <form method="POST" action="/">
+            {% csrf_token %}
+            {{ form.title }}
+            <input type="submit" value="Create Task">
+        </form>
 
-<form method="POST" action="/">
-    {% csrf_token %}
-    {{form.title}}
-    <input type="submit" name="create task">
-</form>
-
-{%for task in tasks%}
-<div>
-    <a href="{% url 'update_task' task.id %}">Update</a>
-    <a href="{% url 'delete_task' task.id %}">delete</a>
-    <p>{{task}}</p>
-</div>
-{% endfor %}
+        {% for task in tasks %}
+            <div>
+                <a href="{% url 'update_task' task.id %}">Update</a>
+                <a href="{% url 'delete_task' task.id %}">Delete</a>
+                <p>{{ task }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <a href="{% provider_login_url 'google' %}">Login with Google</a>
+    {% endif %}
+</body>
+</html>
